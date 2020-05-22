@@ -65,7 +65,7 @@ def split_file(filename, segments):
         try:
             # ffmpeg requires an output file and so it errors when it does not
             # get one so we need to capture stderr, not stdout.
-            output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
+            output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True, shell=True)
         except Exception as e:
             print("exception", e)
         else:
