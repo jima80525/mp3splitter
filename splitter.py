@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import eyed3
 import pathlib
+import platform
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -38,6 +39,17 @@ def build_segments(filename):
         name = f"{base_chapter}_{chapter_section:02}"
         chapter_section += 1
         start_time =  marker[1].text
+        # ffmpeg really doesn't like times with minute field > 60, but I've
+        # found some books that have this.
+        m,s = start_time.split(":")
+        m = int(m)
+        h = 0
+        while m > 59:
+            h += 1
+            m -= 60
+        if h != 0:
+            start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
+
         name = name.replace(" ", "_")
         segments.append((name, start_time))
     return end_time, segments
@@ -51,7 +63,6 @@ def complete_segments(segments, final_time):
         else:
             end_time = final_time
         new_segments.append((segment[0], segment[1], end_time))
-        print((segment[0], segment[1], end_time))
     return new_segments
 
 def split_file(filename, segments):
@@ -60,22 +71,37 @@ def split_file(filename, segments):
     subdir.mkdir()
     for segment in segments:
         segname = f"{subdir}/{fn.stem}_{segment[0]}{fn.suffix}"
-        cmd = f"ffmpeg -i {filename} -acodec copy -ss {segment[1]} -to {segment[2]} {segname}"
-        command = cmd.split()
+        command = ["ffmpeg",
+                   "-i",
+                   "" + filename + "",
+                   "-acodec",
+                   "copy",
+                   "-ss",
+                   f"{segment[1]}",
+                   "-to",
+                   f"{segment[2]}",
+                   "" + segname + "",
+                  ]
+
         try:
+            is_win = 'Win' in platform.system()
             # ffmpeg requires an output file and so it errors when it does not
             # get one so we need to capture stderr, not stdout.
-            output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True, shell=True)
+            output = subprocess.check_output(command, stderr=subprocess.STDOUT,
+                                             universal_newlines=True,
+                                             shell=is_win)
         except Exception as e:
             print("exception", e)
         else:
-            for line in output.splitlines():
-                print(f"Got line: {line}")
+            print(f"Created {segname}")
+            # the following can be handy for debugging ffmpeg issues
+            # for line in output.splitlines():
+                # print(f"Got line: {line}")
 
 
 
 for filename in sys.argv[1:]:
-    print(filename)
+    print(f"Processing:{filename}")
     end_time, segments = build_segments(filename)
     segments = complete_segments(segments, end_time)
     split_file(filename, segments)
