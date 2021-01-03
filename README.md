@@ -39,6 +39,26 @@ It is currently written to split files that are downloaded from the Overdrive se
 
 
 
-The project is currently in the "userful tool for me" stage and has not been tested beyond seeing that it works on the files I needed splitting.  
+## Installing
 
-If you're interested in more features or have a file it doesn't work with, send me a note or create an issue and I'll see what I can do! 
+Right now there's not a good way to install it short of cloning or downloading the repo and running it directly from there.  
+
+Remember you need to have `ffmpeg` installed for this tool to work!  
+
+## Usage
+
+`splitter.py` will split all files presented on the command line.  I usually have a directory where the original MP3 files from overdrive are kept, so running it would look like:
+
+```bash
+$ ./splitter.py book/*.mp3
+```
+
+Note that this will create a directory in the current directory for each file found and split the contents of the given file into that directory.
+
+The tool also creates a `copyit.sh` script which will copy each of the files in order to a fixed position on the file system. **NOTE:** this is currently hard-coded to copy to the position the mp3 player shows up on my machine.  Eventually I'll change it to take a parameter (pull requests welcome!).
+
+## Status
+
+The project is currently in the "useful tool for me" stage and has not been tested beyond seeing that it works on the files I needed splitting.  I did have a pull request to get it working on Windows.  I have **not** tested subsequent releases on windows, but I suspect they work. 
+
+If you're interested in more features or have a file it doesn't work with, send me a note or create an issue and I'll see what I can do! I'll happily review pull requests if you've got a change you'd like.  Send me a note or create an issue if you'd like help creating a pull request. :)

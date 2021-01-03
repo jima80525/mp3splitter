@@ -69,8 +69,9 @@ def split_file(filename, segments):
     fn = pathlib.Path(filename)
     subdir = pathlib.Path(fn.stem)
     subdir.mkdir()
-    for segment in segments:
-        segname = f"{subdir}/{fn.stem}_{segment[0]}{fn.suffix}"
+    segs = []
+    for index, segment in enumerate(segments):
+        segname = f"{subdir}/{fn.stem}_{index:03}_{segment[0]}{fn.suffix}"
         command = ["ffmpeg",
                    "-i",
                    "" + filename + "",
@@ -94,16 +95,26 @@ def split_file(filename, segments):
             print("exception", e)
         else:
             print(f"Created {segname}")
+            segs.append(segname)
             # the following can be handy for debugging ffmpeg issues
             # for line in output.splitlines():
                 # print(f"Got line: {line}")
+    return segs
 
 
 
+allsegs = []
 for filename in sys.argv[1:]:
     print(f"Processing:{filename}")
     end_time, segments = build_segments(filename)
     segments = complete_segments(segments, end_time)
-    split_file(filename, segments)
+    segs = split_file(filename, segments)
+    allsegs.extend(segs)
+with open("copyit.sh", "w") as ff:
+    print("#!/bin/sh", file=ff)
+    print("mkdir /media/usb0/book", file=ff)
+    for seg in allsegs:
+        print(f"cp {seg} /media/usb0/book/", file=ff)
+
 
 
