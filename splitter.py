@@ -4,6 +4,7 @@ import pathlib
 import platform
 import subprocess
 import sys
+import os
 import xml.etree.ElementTree as ET
 
 def convert_time(time_secs):
@@ -102,19 +103,47 @@ def split_file(filename, segments):
     return segs
 
 
-
-allsegs = []
-for filename in sys.argv[1:]:
+def process_single_mp3(filename: str):
     print(f"Processing:{filename}")
+    allsegs = []
     end_time, segments = build_segments(filename)
     segments = complete_segments(segments, end_time)
     segs = split_file(filename, segments)
     allsegs.extend(segs)
-with open("copyit.sh", "w") as ff:
-    print("#!/bin/sh", file=ff)
-    print("mkdir /media/usb0/book", file=ff)
-    for seg in allsegs:
-        print(f"cp {seg} /media/usb0/book/", file=ff)
+
+    with open("copyit.sh", "w") as ff:
+        print("#!/bin/sh", file=ff)
+        print("mkdir /media/usb0/book", file=ff)
+        for seg in allsegs:
+            print(f"cp {seg} /media/usb0/book/", file=ff)
 
 
+def get_mp3_files_in_directory(directory):
+    mp3_paths = []
+    files = os.listdir(directory)
+    for file in files:
+        if file.endswith(".mp3"):
+            mp3_paths.append(os.path.join(directory, file))
+        else:
+            fullpath = os.path.join(directory, file)
+            if os.path.isdir(fullpath):
+                mp3_paths.extend(get_mp3_files_in_directory(fullpath))
+    return mp3_paths
+
+
+def process_filepath(filename: str):
+    try:
+        if os.path.isfile(filename):
+            process_single_mp3(filename)
+        elif os.path.isdir(filename):
+            mp3s = get_mp3_files_in_directory(filename)
+            for mp3 in mp3s:
+                process_single_mp3(mp3)
+    except Exception as e:
+        print(f"oh no!{e}")
+
+
+if __name__=="main":
+    for filename in sys.argv[1:]:
+        process_filepath(filename)
 
