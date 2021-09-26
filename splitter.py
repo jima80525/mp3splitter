@@ -143,7 +143,6 @@ def process_filepath(filename: str):
         print(f"oh no!{e}")
 
 
-if __name__=="main":
+if __name__=="__main__":
     for filename in sys.argv[1:]:
         process_filepath(filename)
-
