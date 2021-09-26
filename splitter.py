@@ -68,14 +68,14 @@ def complete_segments(segments, final_time):
 
 def split_file(filename, segments):
     fn = pathlib.Path(filename)
-    subdir = pathlib.Path(fn.stem)
+    # subdir = pathlib.Path(fn.stem)
     real_path = os.path.realpath(filename)
     dir_path = os.path.dirname(real_path)
-    subdir = os.path.join(dir_path, subdir)
-    os.mkdir(subdir)
+    # subdir = os.path.join(dir_path, subdir)
+    # os.mkdir(subdir)
     segs = []
     for index, segment in enumerate(segments):
-        segname = f"{subdir}/{fn.stem}_{index:03}_{segment[0]}{fn.suffix}"
+        segname = f"{dir_path}\\{fn.stem}_{index:03}_{segment[0]}--split{fn.suffix}"
         command = ["ffmpeg",
                    "-i",
                    "" + filename + "",
