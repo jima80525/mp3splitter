@@ -107,18 +107,21 @@ def split_file(filename, segments):
 
 
 def process_single_mp3(filename: str):
-    print(f"Processing:{filename}")
-    allsegs = []
-    end_time, segments = build_segments(filename)
-    segments = complete_segments(segments, end_time)
-    segs = split_file(filename, segments)
-    allsegs.extend(segs)
+    try:
+        print(f"Processing:{filename}")
+        allsegs = []
+        end_time, segments = build_segments(filename)
+        segments = complete_segments(segments, end_time)
+        segs = split_file(filename, segments)
+        allsegs.extend(segs)
 
-    with open("copyit.sh", "w") as ff:
-        print("#!/bin/sh", file=ff)
-        print("mkdir /media/usb0/book", file=ff)
-        for seg in allsegs:
-            print(f"cp {seg} /media/usb0/book/", file=ff)
+        with open("copyit.sh", "w") as ff:
+            print("#!/bin/sh", file=ff)
+            print("mkdir /media/usb0/book", file=ff)
+            for seg in allsegs:
+                print(f"cp {seg} /media/usb0/book/", file=ff)
+    except Exception as e:
+        print(f"[ERROR] error splitting mp3: { e }")
 
 
 def get_mp3_files_in_directory(directory):
@@ -135,15 +138,12 @@ def get_mp3_files_in_directory(directory):
 
 
 def process_filepath(filename: str):
-    try:
-        if os.path.isfile(filename):
-            process_single_mp3(filename)
-        elif os.path.isdir(filename):
-            mp3s = get_mp3_files_in_directory(filename)
-            for mp3 in mp3s:
-                process_single_mp3(mp3)
-    except Exception as e:
-        print(f"oh no! {e}")
+    if os.path.isfile(filename):
+        process_single_mp3(filename)
+    elif os.path.isdir(filename):
+        mp3s = get_mp3_files_in_directory(filename)
+        for mp3 in mp3s:
+            process_single_mp3(mp3)
 
 
 if __name__=="__main__":
