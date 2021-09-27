@@ -75,7 +75,7 @@ def split_file(filename, segments):
     # os.mkdir(subdir)
     segs = []
     for index, segment in enumerate(segments):
-        segname = f"{dir_path}\\{fn.stem}_{index:03}_{segment[0]}--split{fn.suffix}"
+        segname = f"{dir_path}\\{fn.stem}_{index:03}_{segment[0].replace(':', '_')}--split{fn.suffix}"
         command = ["ffmpeg",
                    "-i",
                    "" + filename + "",
@@ -85,7 +85,7 @@ def split_file(filename, segments):
                    f"{segment[1]}",
                    "-to",
                    f"{segment[2]}",
-                   "" + segname + "",
+                   f"{segname}",
                   ]
 
         try:
