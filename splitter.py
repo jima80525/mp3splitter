@@ -76,33 +76,34 @@ def split_file(filename, segments):
     segs = []
     for index, segment in enumerate(segments):
         segname = f"{dir_path}\\{fn.stem}_{index:03}_{segment[0].replace(':', '_')}--split{fn.suffix}"
-        command = ["ffmpeg",
-                   "-i",
-                   "" + filename + "",
-                   "-acodec",
-                   "copy",
-                   "-ss",
-                   f"{segment[1]}",
-                   "-to",
-                   f"{segment[2]}",
-                   f"{segname}",
-                  ]
+        if not os.path.exists(segname):
+            command = ["ffmpeg",
+                       "-i",
+                       "" + filename + "",
+                       "-acodec",
+                       "copy",
+                       "-ss",
+                       f"{segment[1]}",
+                       "-to",
+                       f"{segment[2]}",
+                       f"{segname}",
+                      ]
 
-        try:
-            is_win = 'Win' in platform.system()
-            # ffmpeg requires an output file and so it errors when it does not
-            # get one so we need to capture stderr, not stdout.
-            output = subprocess.check_output(command, stderr=subprocess.STDOUT,
-                                             universal_newlines=True,
-                                             shell=is_win)
-        except Exception as e:
-            print("exception", e)
-        else:
-            print(f"Created {segname}")
-            segs.append(segname)
-            # the following can be handy for debugging ffmpeg issues
-            # for line in output.splitlines():
-                # print(f"Got line: {line}")
+            try:
+                is_win = 'Win' in platform.system()
+                # ffmpeg requires an output file and so it errors when it does not
+                # get one so we need to capture stderr, not stdout.
+                output = subprocess.check_output(command, stderr=subprocess.STDOUT,
+                                                 universal_newlines=True,
+                                                 shell=is_win)
+            except Exception as e:
+                print("exception", e)
+            else:
+                print(f"Created {segname}")
+                segs.append(segname)
+                # the following can be handy for debugging ffmpeg issues
+                # for line in output.splitlines():
+                    # print(f"Got line: {line}")
     return segs
 
 
