@@ -42,9 +42,18 @@ def build_segments(filename):
         start_time =  marker[1].text
         # ffmpeg really doesn't like times with minute field > 60, but I've
         # found some books that have this.
-        m,s = start_time.split(":")
-        m = int(m)
-        h = 0
+        time_args = start_time.split(":")
+        h=0
+        m=0
+        s=0
+        if len(time_args) == 2:
+            m,s = time_args
+            m = int(m)
+            h = 0
+        elif len(time_args) == 3:
+            h,m,s = time_args
+            h = int(h)
+            m = int(m)
         while m > 59:
             h += 1
             m -= 60
