@@ -84,7 +84,7 @@ def split_file(filename, segments):
     # os.mkdir(subdir)
     segs = []
     for index, segment in enumerate(segments):
-        segname = f"{dir_path}\\{fn.stem}_{index:03}_{segment[0].replace(':', '_')}--split{fn.suffix}"
+        segname = f"{dir_path}\\{fn.stem}_{index:03}_{ clean_filename(segment[0]) }--split{fn.suffix}"
         already_created = os.path.exists(segname)
         command = ["ffmpeg",
                    "-i",
@@ -160,8 +160,13 @@ def process_filepath(filename: str):
             process_single_mp3(mp3)
 
 
+def clean_filename(filename: str) -> str:
+    invalid_chars = '\\/*?"\'<>|'
+    return ''.join(c for c in filename if c not in invalid_chars).replace(':', '_')
+
+
 if __name__=="__main__":
     # for filename in sys.argv[1:]:
         # process_filepath(filename)
 
-    process_filepath("tests/test_files")
+    process_filepath("tests/test_files/The Story for Children-Part01.mp3")
