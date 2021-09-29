@@ -135,14 +135,14 @@ def process_single_mp3(filename: str):
             for seg in allsegs:
                 print(f"cp {seg} /media/usb0/book/", file=ff)
     except Exception as e:
-        print(f"[ERROR] error splitting mp3: { e }")
+        print(f"[ERROR] error splitting { filename }: { e }")
 
 
 def get_mp3_files_in_directory(directory):
     mp3_paths = []
     files = os.listdir(directory)
     for file in files:
-        if file.endswith(".mp3"):
+        if not file.endswith("--split.mp3") and file.endswith(".mp3"):
             mp3_paths.append(os.path.join(directory, file))
         else:
             fullpath = os.path.join(directory, file)
@@ -161,5 +161,7 @@ def process_filepath(filename: str):
 
 
 if __name__=="__main__":
-    for filename in sys.argv[1:]:
-        process_filepath(filename)
+    # for filename in sys.argv[1:]:
+        # process_filepath(filename)
+
+    process_filepath("tests/test_files")
