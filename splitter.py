@@ -166,7 +166,5 @@ def clean_filename(filename: str) -> str:
 
 
 if __name__=="__main__":
-    # for filename in sys.argv[1:]:
-        # process_filepath(filename)
-
-    process_filepath("tests/test_files/The Story for Children-Part01.mp3")
+    for filename in sys.argv[1:]:
+        process_filepath(filename)
