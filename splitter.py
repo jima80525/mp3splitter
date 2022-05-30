@@ -35,13 +35,14 @@ def build_segments(filename: str, chapter_tag: str="OverDrive MediaMarkers") -> 
             chapter_section = 0
             segments = []
             for marker in markers:
-                name, start_time = parse_marker(base_chapter=base_chapter, marker=marker)
+                name, start_time = parse_marker(previous_chapter=base_chapter, marker=marker)
+                base_chapter = name
                 segments.append((name, start_time))
-        except Exception as e2:
-            print(f"Error parsing text frame {frame}: {e2}\nContinued to next frame")
+        except Exception as frame_parse_error:
+            print(f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}': {frame_parse_error} - Continued to next frame")
     return end_time, segments
 
-def parse_marker(base_chapter: str, marker: Any) -> Tuple[str, str]:
+def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
     """Parses a chapter marker into a chapter name and start time
         Args:
             marker (Any): XML Marker
@@ -58,10 +59,9 @@ def parse_marker(base_chapter: str, marker: Any) -> Tuple[str, str]:
     #    Chapter 1-01      03:21.507
     #    Chapter 1-02      06:27.227
     name = marker[0].text.strip()
-    if not name.startswith(base_chapter):
-        base_chapter = name
+    if not name.startswith(previous_chapter):
         chapter_section = 0
-    name = f"{base_chapter}_{chapter_section:02}"
+    name = f"{previous_chapter}_{chapter_section:02}"
     chapter_section += 1
     start_time = marker[1].text
     # ffmpeg really doesn't like times with minute field > 60, but I've
