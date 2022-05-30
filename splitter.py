@@ -6,7 +6,7 @@ import subprocess
 import sys
 import os
 import xml.etree.ElementTree as ET
-from typing import Tuple, List
+from typing import Tuple, List, Any
 
 _CHAPTER_TAGS = [
     ""
@@ -24,56 +24,68 @@ def build_segments(filename: str, chapter_tag: str="OverDrive MediaMarkers") -> 
         audio = eyed3.load(filename)
         text_frames = audio.tag.user_text_frames
         end_time = convert_time(audio.info.time_secs)
-        for frame in text_frames:
+    except Exception as e:
+        print(f"Unable to parse mp3: {e}")
+        return None
+    for frame in text_frames:
+        try:
             xmltext = frame.text
             markers = ET.fromstring(xmltext)
             base_chapter = "invalid I hope I never have chapters like this"
             chapter_section = 0
             segments = []
             for marker in markers:
-                # chapters can be split into several shorter sections and end up being
-                # shown like this:
-                #    Chapter 1         00:00.000
-                #    Chapter 1 (03:21) 03:21.507
-                #    Chapter 1 (06:27) 06:27.227
-                #  Use the chapter name with a counter to create:
-                #    Chapter 1-00      00:00.000
-                #    Chapter 1-01      03:21.507
-                #    Chapter 1-02      06:27.227
-                name = marker[0].text.strip()
-                if not name.startswith(base_chapter):
-                    base_chapter = name
-                    chapter_section = 0
-                name = f"{base_chapter}_{chapter_section:02}"
-                chapter_section += 1
-                start_time =  marker[1].text
-                # ffmpeg really doesn't like times with minute field > 60, but I've
-                # found some books that have this.
-                time_args = start_time.split(":")
-                h=0
-                m=0
-                s=0
-                if len(time_args) == 2:
-                    m,s = time_args
-                    m = int(m)
-                    h = 0
-                elif len(time_args) == 3:
-                    h,m,s = time_args
-                    h = int(h)
-                    m = int(m)
-                while m > 59:
-                    h += 1
-                    m -= 60
-                if h != 0:
-                    start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
-
-                name = name.replace(" ", "_")
+                name, start_time = parse_marker(base_chapter=base_chapter, marker=marker)
                 segments.append((name, start_time))
-        return end_time, segments
-    except Exception as e:
-        print(e)
-        return None
+        except Exception as e2:
+            print(f"Error parsing text frame {frame}: {e2}\nContinued to next frame")
+    return end_time, segments
 
+def parse_marker(base_chapter: str, marker: Any) -> Tuple[str, str]:
+    """Parses a chapter marker into a chapter name and start time
+        Args:
+            marker (Any): XML Marker
+        Returns:
+            Tuple (str, str): Chapter name and start time in MP3
+    """
+    # chapters can be split into several shorter sections and end up being
+    # shown like this:
+    #    Chapter 1         00:00.000
+    #    Chapter 1 (03:21) 03:21.507
+    #    Chapter 1 (06:27) 06:27.227
+    #  Use the chapter name with a counter to create:
+    #    Chapter 1-00      00:00.000
+    #    Chapter 1-01      03:21.507
+    #    Chapter 1-02      06:27.227
+    name = marker[0].text.strip()
+    if not name.startswith(base_chapter):
+        base_chapter = name
+        chapter_section = 0
+    name = f"{base_chapter}_{chapter_section:02}"
+    chapter_section += 1
+    start_time = marker[1].text
+    # ffmpeg really doesn't like times with minute field > 60, but I've
+    # found some books that have this.
+    time_args = start_time.split(":")
+    h = 0
+    m = 0
+    s = 0
+    if len(time_args) == 2:
+        m, s = time_args
+        m = int(m)
+        h = 0
+    elif len(time_args) == 3:
+        h, m, s = time_args
+        h = int(h)
+        m = int(m)
+    while m > 59:
+        h += 1
+        m -= 60
+    if h != 0:
+        start_time = "{0:02}:{1:02}:{2}".format(h, m, s)
+
+    name = name.replace(" ", "_")
+    return (name, start_time)
 
 def complete_segments(segments: List[Tuple[str, str]], final_time: str) -> List[Tuple[str, str, str]]:
     new_segments = []
