@@ -176,8 +176,6 @@ def clean_filename(filename: str) -> str:
     return ''.join(c for c in filename if c not in invalid_chars).replace(':', '_')
 
 
-process_filepath('tests/test_files/NIrV Little Kids Adventure Audio Bible, Volume 3-Part02.mp3')
-
 if __name__=="__main__":
     for filename in sys.argv[1:]:
         process_filepath(filename)
