@@ -1,12 +1,42 @@
 #!/bin/sh
 mkdir /media/usb0/book
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_000_Gloves_Off_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_001_Jugular_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_002_Skype_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_003_Breakthrough_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_004_Authority_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_005_Dessert_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_006_Processing_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_007_Decision_Science_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_008_San_Diego_00--split.mp3 /media/usb0/book/
-cp D:\Projects\Python\mp3splitter\tests\test_files\The Motive-Part02_009_The_Lesson_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_000_Track__49_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_001_Track__50_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_002_Track__51_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_003_Track__52_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_004_Track__53_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_005_Track__54_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_006_Track__55_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_007_Track__56_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_008_Track__57_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_009_Track__58_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_010_Track__59_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_011_Track__60_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_012_Track__61_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_013_Track__62_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_014_Track__63_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_015_Track__64_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_016_Track__65_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_017_Track__66_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_018_Track__67_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_019_Track__68_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_020_Track__69_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_021_Track__70_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_022_Track__71_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_023_Track__72_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_024_Track__73_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_025_Track__74_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_026_Track__75_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_027_Track__76_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_028_Track__77_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_029_Track__78_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_030_Track__79_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_031_Track__80_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_032_Track__81_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_033_Track__82_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_034_Track__83_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_035_Track__84_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_036_Track__85_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_037_Track__86_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_038_Track__87_00--split.mp3 /media/usb0/book/
+cp D:\Projects\Python\mp3splitter\tests\test_files\NIrV Little Kids Adventure Audio Bible, Volume 3-Part02_039_Track__88_00--split.mp3 /media/usb0/book/

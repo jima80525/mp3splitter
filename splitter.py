@@ -61,7 +61,7 @@ def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
     name = marker[0].text.strip()
     if not name.startswith(previous_chapter):
         chapter_section = 0
-    name = f"{previous_chapter}_{chapter_section:02}"
+    name = f"{name}_{chapter_section:02}"
     chapter_section += 1
     start_time = marker[1].text
     # ffmpeg really doesn't like times with minute field > 60, but I've
