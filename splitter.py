@@ -8,18 +8,27 @@ import os
 import xml.etree.ElementTree as ET
 from typing import Tuple, List, Any
 
-_CHAPTER_TAGS = [
-    ""
-]
 
-def convert_time(time_secs) -> str:
+def convert_time(time_secs: int) -> str:
+    """Convert a number of seconds into a human-readable string representing total hours, minutes, and seconds
+        Args:
+            time_secs (int): count of seconds
+        Returns:
+            str: human readable string representing hours, minutes, and seconds
+    """
     fraction = int((time_secs % 1) * 1000)
     seconds = int(time_secs)
     min, sec = divmod(seconds, 60)
     hour, min = divmod(min, 60)
     return f"{hour:02}:{min:02}:{sec:02}.{fraction:03}"
 
-def build_segments(filename: str, chapter_tag: str="OverDrive MediaMarkers") -> Tuple[str, List[Tuple[str, str]]]:
+def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
+    """Creates a list or segments representing chapter names with start and end times
+        Args:
+            filename (str): Path to an mp3 file
+        Returns:
+            Tuple(str, List(str, str)): a tuple representing end time of the file, and a list of tuples representing chapter names and thier start times
+    """
     try:
         audio = eyed3.load(filename)
         text_frames = audio.tag.user_text_frames
