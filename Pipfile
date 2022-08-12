@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+atomicwrites = "==1.4.0"
+attrs = "==21.4.0"
+colorama = "==0.4.4"
+coverage = "==5.5"
+deprecation = "==2.1.0"
+distlib = "==0.3.4"
+eyed3 = "==0.9.6"
+filelock = "==3.7.1"
+filetype = "==1.0.7"
+iniconfig = "==1.1.1"
+platformdirs = "==2.5.2"
+pluggy = "==1.0.0"
+py = "==1.11.0"
+pyparsing = "==2.4.7"
+pytest = "==7.1.2"
+six = "==1.16.0"
+toml = "==0.10.2"
+tomli = "==2.0.1"
+virtualenv = "==20.15.1"
+virtualenv-clone = "==0.5.7"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

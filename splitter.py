@@ -22,6 +22,7 @@ def convert_time(time_secs: int) -> str:
     hour, min = divmod(min, 60)
     return f"{hour:02}:{min:02}:{sec:02}.{fraction:03}"
 
+
 def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
     """Creates a list or segments representing chapter names with start and end times
         Args:
@@ -48,8 +49,10 @@ def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
                 base_chapter = name
                 segments.append((name, start_time))
         except Exception as frame_parse_error:
-            print(f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}': {frame_parse_error} - Continued to next frame")
+            print(
+                f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}': {frame_parse_error} - Continued to next frame")
     return end_time, segments
+
 
 def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
     """Parses a chapter marker into a chapter name and start time
@@ -96,15 +99,17 @@ def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
     name = name.replace(" ", "_")
     return (name, start_time)
 
+
 def complete_segments(segments: List[Tuple[str, str]], final_time: str) -> List[Tuple[str, str, str]]:
     new_segments = []
     for index, segment in enumerate(segments):
         if index < len(segments) - 1:
-            end_time = segments[index+1][1]
+            end_time = segments[index + 1][1]
         else:
             end_time = final_time
         new_segments.append((segment[0], segment[1], end_time))
     return new_segments
+
 
 def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]:
     fn = pathlib.Path(filename)
@@ -115,7 +120,7 @@ def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]
     # os.mkdir(subdir)
     segs = []
     for index, segment in enumerate(segments):
-        segname = f"{dir_path}\\{fn.stem}_{index:03}_{ clean_filename(segment[0]) }--split{fn.suffix}"
+        segname = f"{dir_path}\\{fn.stem}_{index:03}_{clean_filename(segment[0])}--split{fn.suffix}"
         already_created = os.path.exists(segname)
 
         if not already_created:
@@ -140,15 +145,15 @@ def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]
 
             except Exception as e:
                 if not os.path.exists(segname):
-                    print(f"[ERROR] Unable to create file for { segment }: ", e)
+                    print(f"[ERROR] Unable to create file for {segment}: ", e)
             if os.path.exists(segname):
                 segs.append(segname)
                 print(f"Created {segname}")
         else:
-            print(f"File { segname } already exists")
+            print(f"File {segname} already exists")
             # the following can be handy for debugging ffmpeg issues
             # for line in output.splitlines():
-                # print(f"Got line: {line}")
+            # print(f"Got line: {line}")
     return segs
 
 
@@ -167,7 +172,7 @@ def process_single_mp3(filename: str) -> None:
             for seg in allsegs:
                 print(f"cp {seg} /media/usb0/book/", file=ff)
     except Exception as e:
-        print(f"[ERROR] error splitting { filename }: { e }")
+        print(f"[ERROR] error splitting {filename}: {e}")
 
 
 def get_mp3_files_in_directory(directory: str) -> List[str]:
@@ -197,6 +202,6 @@ def clean_filename(filename: str) -> str:
     return ''.join(c for c in filename if c not in invalid_chars).replace(':', '_')
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     for filename in sys.argv[1:]:
         process_filepath(filename)

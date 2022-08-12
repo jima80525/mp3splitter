@@ -133,3 +133,4 @@ tests/
 .idea/
 Scripts/
 pyvenv.cfg
+copyit.sh
