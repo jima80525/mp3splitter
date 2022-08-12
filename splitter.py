@@ -34,24 +34,23 @@ def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
         audio = eyed3.load(filename)
         text_frames = audio.tag.user_text_frames
         end_time = convert_time(audio.info.time_secs)
+        for frame in text_frames:
+            try:
+                xmltext = frame.text
+                markers = ET.fromstring(xmltext)
+                base_chapter = "invalid I hope I never have chapters like this"
+                chapter_section = 0
+                segments = []
+                for marker in markers:
+                    name, start_time = parse_marker(previous_chapter=base_chapter, marker=marker)
+                    base_chapter = name
+                    segments.append((name, start_time))
+            except Exception as frame_parse_error:
+                print(
+                    f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}' on {filename}: {frame_parse_error} - Doesn't seem to contain markers, Continued to next frame")
+        return end_time, segments
     except Exception as e:
-        print(f"Unable to parse mp3: {e}")
-        return None
-    for frame in text_frames:
-        try:
-            xmltext = frame.text
-            markers = ET.fromstring(xmltext)
-            base_chapter = "invalid I hope I never have chapters like this"
-            chapter_section = 0
-            segments = []
-            for marker in markers:
-                name, start_time = parse_marker(previous_chapter=base_chapter, marker=marker)
-                base_chapter = name
-                segments.append((name, start_time))
-        except Exception as frame_parse_error:
-            print(
-                f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}': {frame_parse_error} - Continued to next frame")
-    return end_time, segments
+        print(e)
 
 
 def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
@@ -72,33 +71,33 @@ def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
     #    Chapter 1-02      06:27.227
     name = marker[0].text.strip()
     if not name.startswith(previous_chapter):
+        previous_chapter = name
         chapter_section = 0
-    name = f"{name}_{chapter_section:02}"
+    name = f"{previous_chapter}_{chapter_section:02}"
     chapter_section += 1
-    start_time = marker[1].text
+    start_time =  marker[1].text
     # ffmpeg really doesn't like times with minute field > 60, but I've
     # found some books that have this.
     time_args = start_time.split(":")
-    h = 0
-    m = 0
-    s = 0
+    h=0
+    m=0
+    s=0
     if len(time_args) == 2:
-        m, s = time_args
+        m,s = time_args
         m = int(m)
         h = 0
     elif len(time_args) == 3:
-        h, m, s = time_args
+        h,m,s = time_args
         h = int(h)
         m = int(m)
     while m > 59:
         h += 1
         m -= 60
     if h != 0:
-        start_time = "{0:02}:{1:02}:{2}".format(h, m, s)
+        start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
 
     name = name.replace(" ", "_")
     return (name, start_time)
-
 
 def complete_segments(segments: List[Tuple[str, str]], final_time: str) -> List[Tuple[str, str, str]]:
     new_segments = []
