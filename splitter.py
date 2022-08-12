@@ -1,26 +1,14 @@
 #!/usr/bin/env python3
-import eyed3
+import os
 import pathlib
 import platform
 import subprocess
 import sys
-import os
 import xml.etree.ElementTree as ET
 from typing import Tuple, List, Any
+from utils import Utilities
 
-
-def convert_time(time_secs: int) -> str:
-    """Convert a number of seconds into a human-readable string representing total hours, minutes, and seconds
-        Args:
-            time_secs (int): count of seconds
-        Returns:
-            str: human readable string representing hours, minutes, and seconds
-    """
-    fraction = int((time_secs % 1) * 1000)
-    seconds = int(time_secs)
-    min, sec = divmod(seconds, 60)
-    hour, min = divmod(min, 60)
-    return f"{hour:02}:{min:02}:{sec:02}.{fraction:03}"
+import eyed3
 
 
 def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
@@ -33,7 +21,7 @@ def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
     try:
         audio = eyed3.load(filename)
         text_frames = audio.tag.user_text_frames
-        end_time = convert_time(audio.info.time_secs)
+        end_time = Utilities.convert_time(audio.info.time_secs)
         for frame in text_frames:
             try:
                 xmltext = frame.text
@@ -75,29 +63,30 @@ def parse_marker(previous_chapter: str, marker: Any) -> Tuple[str, str]:
         chapter_section = 0
     name = f"{previous_chapter}_{chapter_section:02}"
     chapter_section += 1
-    start_time =  marker[1].text
+    start_time = marker[1].text
     # ffmpeg really doesn't like times with minute field > 60, but I've
     # found some books that have this.
     time_args = start_time.split(":")
-    h=0
-    m=0
-    s=0
+    h = 0
+    m = 0
+    s = 0
     if len(time_args) == 2:
-        m,s = time_args
+        m, s = time_args
         m = int(m)
         h = 0
     elif len(time_args) == 3:
-        h,m,s = time_args
+        h, m, s = time_args
         h = int(h)
         m = int(m)
     while m > 59:
         h += 1
         m -= 60
     if h != 0:
-        start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
+        start_time = "{0:02}:{1:02}:{2}".format(h, m, s)
 
     name = name.replace(" ", "_")
     return (name, start_time)
+
 
 def complete_segments(segments: List[Tuple[str, str]], final_time: str) -> List[Tuple[str, str, str]]:
     new_segments = []
@@ -119,7 +108,7 @@ def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]
     # os.mkdir(subdir)
     segs = []
     for index, segment in enumerate(segments):
-        segname = f"{dir_path}\\{fn.stem}_{index:03}_{clean_filename(segment[0])}--split{fn.suffix}"
+        segname = f"{dir_path}\\{fn.stem}_{index:03}_{Utilities.clean_filename(segment[0])}--split{fn.suffix}"
         already_created = os.path.exists(segname)
 
         if not already_created:
@@ -174,31 +163,13 @@ def process_single_mp3(filename: str) -> None:
         print(f"[ERROR] error splitting {filename}: {e}")
 
 
-def get_mp3_files_in_directory(directory: str) -> List[str]:
-    mp3_paths = []
-    files = os.listdir(directory)
-    for file in files:
-        if not file.endswith("--split.mp3") and file.endswith(".mp3"):
-            mp3_paths.append(os.path.join(directory, file))
-        else:
-            fullpath = os.path.join(directory, file)
-            if os.path.isdir(fullpath):
-                mp3_paths.extend(get_mp3_files_in_directory(fullpath))
-    return mp3_paths
-
-
 def process_filepath(filename: str) -> None:
     if os.path.isfile(filename):
         process_single_mp3(filename)
     elif os.path.isdir(filename):
-        mp3s = get_mp3_files_in_directory(filename)
+        mp3s = Utilities.get_mp3_files_in_directory(filename)
         for mp3 in mp3s:
             process_single_mp3(mp3)
-
-
-def clean_filename(filename: str) -> str:
-    invalid_chars = '\\/*?"\'<>|'
-    return ''.join(c for c in filename if c not in invalid_chars).replace(':', '_')
 
 
 if __name__ == "__main__":
