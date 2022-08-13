@@ -165,9 +165,6 @@ def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]
                 print(f"Created {segname}")
         else:
             print(f"File {segname} already exists")
-            # the following can be handy for debugging ffmpeg issues
-            # for line in output.splitlines():
-            # print(f"Got line: {line}")
     return segs
 
 
