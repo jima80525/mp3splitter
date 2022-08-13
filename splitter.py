@@ -7,6 +7,7 @@ import sys
 import xml.etree.ElementTree as ET
 from typing import Tuple, List, Any
 from utils import Utilities
+from mp3_tag_utils import Mp3TagUtilities
 
 import eyed3
 
@@ -136,6 +137,10 @@ def split_file(filename: str, segments: List[Tuple[str, str, str]]) -> List[str]
                     print(f"[ERROR] Unable to create file for {segment}: ", e)
             if os.path.exists(segname):
                 segs.append(segname)
+
+                # replace title tag with segment title
+                Mp3TagUtilities.set_audio_file_tag(segname, title=segment[0].replace("_00", ""))
+
                 print(f"Created {segname}")
         else:
             print(f"File {segname} already exists")
