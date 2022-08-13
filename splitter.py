@@ -11,6 +11,31 @@ from mp3_tag_utils import Mp3TagUtilities
 
 import eyed3
 
+def get_markers_xml(filename: str, text_frames: Any) -> str:
+    xml_file = filename.replace(".mp3", ".xml")
+    xml_fixed_file = filename.replace(".mp3", "_fixed.xml")
+
+    xml_text = ""
+
+    # check for filename_fixed.xml and use that to set markers
+    if os.path.exists(xml_fixed_file):
+        with open(xml_fixed_file, "r") as f_f:
+            xml_text = f_f.read()
+        return xml_text
+
+    try:
+        for frame in text_frames:
+            xml_text = frame.text
+            if "Markers" in xml_text:
+                if not os.path.exists(xml_file):
+                    with open(xml_file, "w") as f:
+                        f.write(xml_text)
+                break
+    except Exception as e:
+        print(f"Error retrieving marker data from mp3: {e}")
+
+    return xml_text
+
 
 def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
     """Creates a list or segments representing chapter names with start and end times
@@ -23,20 +48,16 @@ def build_segments(filename: str) -> Tuple[str, List[Tuple[str, str]]]:
         audio = eyed3.load(filename)
         text_frames = audio.tag.user_text_frames
         end_time = Utilities.convert_time(audio.info.time_secs)
-        for frame in text_frames:
-            try:
-                xmltext = frame.text
-                markers = ET.fromstring(xmltext)
-                base_chapter = "invalid I hope I never have chapters like this"
-                chapter_section = 0
-                segments = []
-                for marker in markers:
-                    name, start_time = parse_marker(previous_chapter=base_chapter, marker=marker)
-                    base_chapter = name
-                    segments.append((name, start_time))
-            except Exception as frame_parse_error:
-                print(
-                    f"[WARNING] Error parsing text frame '{frame.id}':'{frame.text}' on {filename}: {frame_parse_error} - Doesn't seem to contain markers, Continued to next frame")
+        segments = []
+        xml_text = get_markers_xml(filename=filename, text_frames=text_frames)
+        markers = ET.fromstring(xml_text)
+        base_chapter = "invalid I hope I never have chapters like this"
+        chapter_section = 0
+        segments = []
+        for marker in markers:
+            name, start_time = parse_marker(previous_chapter=base_chapter, marker=marker)
+            base_chapter = name
+            segments.append((name, start_time))
         return end_time, segments
     except Exception as e:
         print(e)
