@@ -51,7 +51,7 @@ def build_segments(filename):
             start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
 
         name = name.replace(" ", "_")
-        segments.append((name, start_time))
+        segments.append((name, start_time, base_chapter))
     return end_time, segments
 
 
@@ -62,7 +62,7 @@ def complete_segments(segments, final_time):
             end_time = segments[index+1][1]
         else:
             end_time = final_time
-        new_segments.append((segment[0], segment[1], end_time))
+        new_segments.append((segment[0], segment[1], end_time, segment[2]))
     return new_segments
 
 def split_file(filename, segments):
@@ -77,6 +77,8 @@ def split_file(filename, segments):
                    "" + filename + "",
                    "-acodec",
                    "copy",
+                   "-metadata",
+                   f"title={segment[3]}",
                    "-ss",
                    f"{segment[1]}",
                    "-to",
