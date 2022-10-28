@@ -6,12 +6,14 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
+
 def convert_time(time_secs):
     fraction = int((time_secs % 1) * 1000)
     seconds = int(time_secs)
     min, sec = divmod(seconds, 60)
     hour, min = divmod(min, 60)
     return f"{hour:02}:{min:02}:{sec:02}.{fraction:03}"
+
 
 def build_segments(filename):
     audio = eyed3.load(filename)
@@ -38,17 +40,17 @@ def build_segments(filename):
             chapter_section = 0
         name = f"{base_chapter}_{chapter_section:02}"
         chapter_section += 1
-        start_time =  marker[1].text
+        start_time = marker[1].text
         # ffmpeg really doesn't like times with minute field > 60, but I've
         # found some books that have this.
-        m,s = start_time.split(":")
+        m, s = start_time.split(":")
         m = int(m)
         h = 0
         while m > 59:
             h += 1
             m -= 60
         if h != 0:
-            start_time = "{0:02}:{1:02}:{2}".format(h,m,s)
+            start_time = "{0:02}:{1:02}:{2}".format(h, m, s)
 
         name = name.replace(" ", "_")
         segments.append((name, start_time, base_chapter))
@@ -59,11 +61,12 @@ def complete_segments(segments, final_time):
     new_segments = []
     for index, segment in enumerate(segments):
         if index < len(segments) - 1:
-            end_time = segments[index+1][1]
+            end_time = segments[index + 1][1]
         else:
             end_time = final_time
         new_segments.append((segment[0], segment[1], end_time, segment[2]))
     return new_segments
+
 
 def split_file(filename, segments, starting_track=1):
     fn = pathlib.Path(filename)
@@ -86,8 +89,8 @@ def split_file(filename, segments, starting_track=1):
                    "-to",
                    f"{segment[2]}",
                    "" + segname + "",
-                  ]
-        starting_track = starting_track+1
+                   ]
+        starting_track = starting_track + 1
         try:
             is_win = 'Win' in platform.system()
             # ffmpeg requires an output file and so it errors when it does not
@@ -102,13 +105,12 @@ def split_file(filename, segments, starting_track=1):
             segs.append(segname)
             # the following can be handy for debugging ffmpeg issues
             # for line in output.splitlines():
-                # print(f"Got line: {line}")
+            # print(f"Got line: {line}")
     return segs, starting_track
 
 
-
 allsegs = []
-starting_track=1
+starting_track = 1
 for filename in sys.argv[1:]:
     print(f"Processing:{filename}")
     end_time, segments = build_segments(filename)
@@ -120,6 +122,3 @@ with open("copyit.sh", "w") as ff:
     print("mkdir /media/usb0/book", file=ff)
     for seg in allsegs:
         print(f"cp {seg} /media/usb0/book/", file=ff)
-
-
-
