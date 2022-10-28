@@ -65,7 +65,7 @@ def complete_segments(segments, final_time):
         new_segments.append((segment[0], segment[1], end_time, segment[2]))
     return new_segments
 
-def split_file(filename, segments):
+def split_file(filename, segments, starting_track=1):
     fn = pathlib.Path(filename)
     subdir = pathlib.Path(fn.stem)
     subdir.mkdir()
@@ -79,13 +79,15 @@ def split_file(filename, segments):
                    "copy",
                    "-metadata",
                    f"title={segment[3]}",
+                   "-metadata",
+                   f"track={starting_track}",
                    "-ss",
                    f"{segment[1]}",
                    "-to",
                    f"{segment[2]}",
                    "" + segname + "",
                   ]
-
+        starting_track = starting_track+1
         try:
             is_win = 'Win' in platform.system()
             # ffmpeg requires an output file and so it errors when it does not
@@ -101,16 +103,17 @@ def split_file(filename, segments):
             # the following can be handy for debugging ffmpeg issues
             # for line in output.splitlines():
                 # print(f"Got line: {line}")
-    return segs
+    return segs, starting_track
 
 
 
 allsegs = []
+starting_track=1
 for filename in sys.argv[1:]:
     print(f"Processing:{filename}")
     end_time, segments = build_segments(filename)
     segments = complete_segments(segments, end_time)
-    segs = split_file(filename, segments)
+    segs, starting_track = split_file(filename, segments, starting_track)
     allsegs.extend(segs)
 with open("copyit.sh", "w") as ff:
     print("#!/bin/sh", file=ff)
