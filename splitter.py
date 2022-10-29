@@ -41,9 +41,10 @@ def build_segments(filename):
         name = f"{base_chapter}_{chapter_section:02}"
         chapter_section += 1
         start_time = marker[1].text
+        times = start_time.split(":")
         # ffmpeg really doesn't like times with minute field > 60, but I've
         # found some books that have this.
-        m, s = start_time.split(":")
+        m, s = start_time.split(":", 1)
         m = int(m)
         h = 0
         while m > 59:
@@ -102,10 +103,10 @@ def split_file(filename, segments, starting_track=1):
             print("exception", e)
         else:
             print(f"Created {segname}")
-            segs.append(segname)
             # the following can be handy for debugging ffmpeg issues
             # for line in output.splitlines():
             # print(f"Got line: {line}")
+        segs.append(segname)
     return segs, starting_track
 
 
